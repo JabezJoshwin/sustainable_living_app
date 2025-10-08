@@ -119,71 +119,132 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    checked = List<bool>.filled(tasks.length, false);  // Initialize all unchecked
+    checked = List<bool>.filled(tasks.length, false);
   }
+
+  int score = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home"),
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
-              child: const Text(
-                "Tasks: ",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40, color: Colors.black87),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              alignment: Alignment.center,
+              child: Text(
+                "Your Points: $score ☘️",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 36,
+                  color: Colors.green[900],
+                  shadows: [
+                    Shadow(
+                      color: Colors.green.withOpacity(0.4),
+                      offset: Offset(2, 2),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
               ),
             ),
-            Row(
-              children: [
-                Text(
-                  "Dashboard",
-                  style: TextStyle(color: Colors.yellowAccent[300]),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+              child: Text(
+                "Dashboard",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.green[600],
+                  letterSpacing: 1.1,
                 ),
-              ],
+              ),
             ),
             ...List.generate(
               tasks.length,
-              (i) => Container(
-                padding: const EdgeInsets.all(20),
-                margin: const EdgeInsets.all(5),
-                color: Colors.white54,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                         Checkbox(
-                      value: checked[i],
-                      onChanged: (bool? value) {
-                        setState(() {
-                          checked[i] = value ?? false;
-                        });
-                      },
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        "${tasks[i]["title"]!}",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 25),
+              (i) => Card(
+                elevation: 3,
+                margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: checked[i],
+                            activeColor: Colors.green[700],
+                            onChanged: (bool? value) {
+                              setState(() {
+                                checked[i] = value ?? false;
+                                if (checked[i]) {
+                                  score += tasks[i]["points"] as int;
+                                } else {
+                                  score -= tasks[i]["points"] as int;
+                                }
+                              });
+                            },
+                          ),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              "${tasks[i]["title"]!}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                                color: Colors.green[800],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Text("Points: ☘️${tasks[i]["points"]}", style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.green[600]
-                    ),),
-                  ],
+                      const SizedBox(height: 6),
+                      Text(
+                        "${tasks[i]["description"]}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Chip(
+                            label: Text(
+                              tasks[i]["type"].toString().toUpperCase(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            backgroundColor: Colors.green[600],
+                          ),
+                          Text(
+                            "Points: ☘️${tasks[i]["points"]}",
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              color: Colors.green[700],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

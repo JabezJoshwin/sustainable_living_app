@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sustainable_living_app/pages/home.dart';
+import 'package:sustainable_living_app/pages/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const Home(), // set Home() as the starting screen
+      home: const Login(), // set Home() as the s. tarting screen
     );
   }
 }
